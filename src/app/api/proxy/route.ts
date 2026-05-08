@@ -97,7 +97,14 @@ function rewriteHtml(html: string, origin: string): string {
 (function(){
   document.addEventListener('click', function(e){
     var a = e.target.closest('a');
-    if(a){ e.preventDefault(); e.stopPropagation(); }
+    if(a){
+      var href = a.getAttribute('href');
+      // Only block real navigation links, allow href="#", href="", or no href (used as buttons)
+      if(href && href !== '#' && href !== '' && !href.startsWith('#')){
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }
   }, true);
   try { history.pushState = function(){}; history.replaceState = function(){}; } catch(e){}
 })();
